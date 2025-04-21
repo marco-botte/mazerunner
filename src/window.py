@@ -1,32 +1,25 @@
-from tkinter import BOTH, Canvas, Tk
+import signal
 
-from .line import Line
+import arcade
+
+from .maze import Maze
+from .renderer import BACKGROUND_COLOR, Renderer
 
 
-class Window:
-    def __init__(self, width: int, height: int) -> None:
-        self.root = Tk()
-        self.root.title("Window")
-        self.root.geometry(f"{width}x{height}")
-        self.canvas = Canvas(self.root, width=width, height=height)
-        self.canvas.pack(fill=BOTH, expand=True)
+class Window(arcade.Window):
+    def __init__(self, width: int, height: int, maze: Maze) -> None:
+        super().__init__(width, height, "mazerunner")
+        arcade.set_background_color(BACKGROUND_COLOR)
+        self.maze = maze
         self.width = width
         self.height = height
-        self.running = False
+        self.renderer = Renderer(maze)
 
-    def wait_for_close(self) -> None:
-        self.running = True
-        while self.running:
-            self.redraw()
+    def on_update(self, delta_time: float) -> None:
+        super().on_update(delta_time)
 
-    def close(self) -> None:
-        self.root = Tk()
-        self.running = False
-        self.root.protocol("WM_DELETE_WINDOW", self.close)
+    def on_close(self) -> None:
+        signal.raise_signal(signal.SIGINT)
 
-    def redraw(self) -> None:
-        self.root.update()
-        self.root.update_idletasks()
-
-    def draw_line(self, line: Line, fill_color: str) -> None:
-        line.draw(self.canvas, fill_color)
+    def on_draw(self) -> None:
+        self.renderer.draw()

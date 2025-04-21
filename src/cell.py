@@ -1,7 +1,6 @@
 from functools import cached_property
 
-from .line import Line, Point
-from .window import Window
+from .point import Point
 
 CELL_WALLS = {
     "top": "has_top_wall",
@@ -12,57 +11,54 @@ CELL_WALLS = {
 
 
 class Cell:
-    def __init__(self, top_left: Point, bottom_right: Point, window: Window) -> None:
-        self._top_left = top_left
-        self._bottom_right = bottom_right
-        self._window = window
+    def __init__(self, top_left: Point, bottom_right: Point) -> None:
+        self.top_left = top_left
+        self.bottom_right = bottom_right
         self.has_left_wall = True
         self.has_right_wall = True
         self.has_top_wall = True
         self.has_bottom_wall = True
+        self.visited = False
 
-    def draw_to(self, cell: "Cell", undo=False) -> None:
-        inbetween_centers = (
-            Point(self.center.x, cell.center.y)
-            if self.center.x < cell.center.x
-            else Point(cell.center.x, self.center.y)
-        )
-        line_1 = Line(self.center, inbetween_centers)
-        line_2 = Line(inbetween_centers, cell.center)
-        color = "gray" if undo else "red"
-        self._window.draw_line(line_1, color)
-        self._window.draw_line(line_2, color)
-
-    def draw(self) -> None:
-        if self.has_top_wall:
-            line = Line(self._top_left, self._top_right)
-            self._window.draw_line(line, "white")
-        if self.has_left_wall:
-            line = Line(self._top_left, self._bottom_left)
-            self._window.draw_line(line, "white")
-        if self.has_bottom_wall:
-            line = Line(self._bottom_left, self._bottom_right)
-            self._window.draw_line(line, "white")
-        if self.has_right_wall:
-            line = Line(self._bottom_right, self._top_right)
-            self._window.draw_line(line, "white")
-
-    def remove_wall(self, direction: str) -> None:
+    def remove_wall(self, direction: str, opposite: bool = False) -> None:
         if direction not in CELL_WALLS:
             return
-        setattr(self, CELL_WALLS[direction], False)
+        if not opposite:
+            setattr(self, CELL_WALLS[direction], False)
+            return
+        if direction == "right":
+            setattr(self, CELL_WALLS["left"], False)
+        if direction == "left":
+            setattr(self, CELL_WALLS["right"], False)
+        if direction == "top":
+            setattr(self, CELL_WALLS["bottom"], False)
+        if direction == "bottom":
+            setattr(self, CELL_WALLS["top"], False)
 
     @cached_property
-    def _top_right(self) -> Point:
-        return Point(self._bottom_right.x, self._top_left.y)
+    def top_right(self) -> Point:
+        return Point(self.bottom_right.x, self.top_left.y)
 
     @cached_property
-    def _bottom_left(self) -> Point:
-        return Point(self._top_left.x, self._bottom_right.y)
+    def bottom_left(self) -> Point:
+        return Point(self.top_left.x, self.bottom_right.y)
 
     @cached_property
     def center(self) -> Point:
         return Point(
-            (self._top_left.x + self._bottom_right.x) / 2,
-            (self._top_left.y + self._bottom_right.y) / 2,
+            (self.top_left.x + self.bottom_right.x) / 2,
+            (self.top_left.y + self.bottom_right.y) / 2,
         )
+
+    @property
+    def wall_lines(self) -> list[tuple[Point, Point]]:
+        lines: list[tuple[Point, Point]] = []
+        if self.has_top_wall:
+            lines.append((self.top_left, self.top_right))
+        if self.has_left_wall:
+            lines.append((self.top_left, self.bottom_left))
+        if self.has_bottom_wall:
+            lines.append((self.bottom_left, self.bottom_right))
+        if self.has_right_wall:
+            lines.append((self.bottom_right, self.top_right))
+        return lines
