@@ -10,7 +10,6 @@ class Maze:
         self.num_cols = num_cols
         self.cell_width = cell_width
         self.cell_height = cell_height
-        self.random = random.Random(num_rows)
         self.cells = self._create_cells()
         self._break_walls(0, 0)
 
@@ -49,7 +48,7 @@ class Maze:
             ]
             if not possible:
                 break
-            next_x, next_y, direction = self.random.choice(possible)
+            next_x, next_y, direction = random.choice(possible)
             cell.remove_wall(direction)
             self.cells[next_x][next_y].remove_wall(direction, True)
             self._break_walls(next_x, next_y)

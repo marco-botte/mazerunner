@@ -1,3 +1,4 @@
+from functools import cached_property
 from itertools import product
 
 import networkx as nx
@@ -12,8 +13,6 @@ class MazeGraph:
         self.n_cols = self.maze.num_cols
         self.node_idxs = list(product(range(self.n_rows), range(self.n_cols)))
         self.graph = self._graph_from_maze()
-        print(list(self.graph.nodes))
-        print(list(self.graph.edges))
 
     def _graph_from_maze(self) -> nx.Graph:
         graph = nx.Graph()
@@ -27,3 +26,7 @@ class MazeGraph:
                 edges.append(((x_idx, y_idx), (x_idx, y_idx + 1)))
         graph.add_edges_from(edges)
         return graph
+
+    @cached_property
+    def shortest_path_nodes(self) -> list[tuple[int, int]]:
+        return nx.shortest_path(self.graph, (0, 0), (self.n_rows - 1, self.n_cols - 1))
