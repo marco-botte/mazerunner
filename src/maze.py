@@ -1,6 +1,6 @@
 import random
 
-from .cell import Cell
+from .cell import Cell, Direction
 from .point import Point
 
 
@@ -50,10 +50,10 @@ class Maze:
             self.cells[next_x][next_y].remove_wall(direction, True)
             self._break_walls(next_x, next_y)
 
-    def _adjacent_to(self, x_idx: int, y_idx: int) -> list[tuple[int, int, str]]:
-        left = (x_idx - 1, y_idx, "left")
-        right = (x_idx + 1, y_idx, "right")
-        top = (x_idx, y_idx - 1, "top")
-        bottom = (x_idx, y_idx + 1, "bottom")
+    def _adjacent_to(self, x_idx: int, y_idx: int) -> list[tuple[int, int, Direction]]:
+        left = (x_idx - 1, y_idx, Direction.LEFT)
+        right = (x_idx + 1, y_idx, Direction.RIGHT)
+        top = (x_idx, y_idx - 1, Direction.TOP)
+        bottom = (x_idx, y_idx + 1, Direction.BOTTOM)
         in_bounds = lambda pt: 0 <= pt[0] < self.num_rows and 0 <= pt[1] < self.num_cols  # noqa: E731
         return [adj for adj in [left, right, top, bottom] if in_bounds(adj)]

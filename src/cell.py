@@ -1,13 +1,27 @@
+from enum import Enum
 from functools import cached_property
 
 from .point import Point
 
-CELL_WALLS = {
-    "top": "has_top_wall",
-    "left": "has_left_wall",
-    "bottom": "has_bottom_wall",
-    "right": "has_right_wall",
-}
+
+class Direction(Enum):
+    LEFT = "left"
+    RIGHT = "right"
+    TOP = "top"
+    BOTTOM = "bottom"
+
+
+def opposite(direction: Direction) -> Direction:
+    match direction:
+        case Direction.LEFT:
+            return Direction.RIGHT
+        case Direction.RIGHT:
+            return Direction.LEFT
+        case Direction.BOTTOM:
+            return Direction.TOP
+        case Direction.TOP:
+            return Direction.BOTTOM
+    raise ValueError("no valid direction")
 
 
 class Cell:
@@ -20,20 +34,10 @@ class Cell:
         self.has_bottom_wall = True
         self.visited = False
 
-    def remove_wall(self, direction: str, opposite: bool = False) -> None:
-        if direction not in CELL_WALLS:
-            return
-        if not opposite:
-            setattr(self, CELL_WALLS[direction], False)
-            return
-        if direction == "right":
-            setattr(self, CELL_WALLS["left"], False)
-        if direction == "left":
-            setattr(self, CELL_WALLS["right"], False)
-        if direction == "top":
-            setattr(self, CELL_WALLS["bottom"], False)
-        if direction == "bottom":
-            setattr(self, CELL_WALLS["top"], False)
+    def remove_wall(self, direction: Direction, opposite_dir: bool = False) -> None:
+        dir = direction.value if not opposite_dir else opposite(direction).value
+        attr = f"has_{dir}_wall"
+        setattr(self, attr, False)
 
     @cached_property
     def top_right(self) -> Point:
