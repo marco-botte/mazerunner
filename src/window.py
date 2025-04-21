@@ -14,7 +14,7 @@ class Window(arcade.Window):
     def __init__(self, width: int, height: int, maze: Maze, fps: int) -> None:
         super().__init__(width, height, "mazerunner", update_rate=1 / fps, draw_rate=1 / fps)
         arcade.set_background_color(BACKGROUND_COLOR)
-        self.renderer = Renderer(maze)
+        self.renderer = Renderer(maze, scale=width / 5000)
         self.path_length = 0
         self.clock = arcade.clock.Clock()
         self.finished = 0.0

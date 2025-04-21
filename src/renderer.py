@@ -16,8 +16,9 @@ FINISH_COLOR = arcade.color.SUNGLOW
 
 
 class Renderer:
-    def __init__(self, maze: Maze):
+    def __init__(self, maze: Maze, scale: float):
         self.maze = maze
+        self.scale = scale
         self.runner = MazeRunner(maze)
         self.solved_maze = False
         self.border_color = BORDER_COLOR
@@ -66,12 +67,12 @@ class Renderer:
 
     @cached_property
     def start(self) -> arcade.Sprite:
-        start = arcade.Sprite("assets/icons/start.png", 0.2, hit_box_algorithm="None")
+        start = arcade.Sprite("assets/icons/start.png", self.scale, hit_box_algorithm="None")
         start.position = (self.maze.cells[0][0].center.x, self.maze.cells[0][0].center.y)
         return start
 
     @cached_property
     def finish(self) -> arcade.Sprite:
-        finish = arcade.Sprite("assets/icons/finish.png", 0.2, hit_box_algorithm="None")
+        finish = arcade.Sprite("assets/icons/finish.png", self.scale, hit_box_algorithm="None")
         finish.position = (self.maze.cells[-1][-1].center.x, self.maze.cells[-1][-1].center.y)
         return finish
