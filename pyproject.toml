@@ -1,0 +1,33 @@
+[project]
+name = "mazerunner"
+version = "0.1.0"
+description = "a boot.dev project for algorithms"
+authors = [
+    {name = "marco-botte",email = "marco.botte90@googlemail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "isort (>=6.0.1,<7.0.0)",
+    "mypy (>=1.15.0,<2.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+isort = "^6.0.1"
+mypy = "^1.15.0"
+ruff = "^0.11.6"
+pytest = "^8.3.5"
+
+[tool.ruff]
+line-length = 100
+lint.select = ["E", "W", "F", "C", "T"]
+extend-exclude = ["typing", "mypy", "I"]
+
+[tool.isort]
+line_length = 100
+
