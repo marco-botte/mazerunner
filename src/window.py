@@ -3,6 +3,7 @@ import signal
 import arcade
 
 from .maze import Maze
+from .maze_graph import MazeGraph
 from .renderer import BACKGROUND_COLOR, Renderer
 
 
@@ -13,7 +14,8 @@ class Window(arcade.Window):
         self.maze = maze
         self.width = width
         self.height = height
-        self.renderer = Renderer(maze)
+        self.graph = MazeGraph(maze)
+        self.renderer = Renderer(self.graph)
 
     def on_update(self, delta_time: float) -> None:
         super().on_update(delta_time)

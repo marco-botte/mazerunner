@@ -20,6 +20,9 @@ class Maze:
         cell_height = round(height / (num_cols + 4))  # 2 padding on each side
         return cls(num_rows, num_cols, cell_width, cell_height)
 
+    def cell(self, i: int, j: int) -> Cell:
+        return self.cells[i][j]
+
     def _create_cells(self) -> list[list[Cell]]:
         cells: list[list[Cell]] = []
         for idx_x in range(self.num_rows):

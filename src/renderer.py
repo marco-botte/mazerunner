@@ -3,7 +3,7 @@ from typing import Sequence
 import arcade
 
 from .cell import Cell
-from .maze import Maze
+from .maze_graph import MazeGraph
 from .point import Point
 
 BACKGROUND_COLOR = arcade.color.CADET_BLUE
@@ -15,12 +15,13 @@ FINISH = arcade.Sprite("assets/icons/finish.png", 0.2, hit_box_algorithm="None")
 
 
 class Renderer:
-    def __init__(self, maze: Maze):
-        self.maze = maze
+    def __init__(self, maze_graph: MazeGraph):
+        self.maze = maze_graph.maze
+        self.graph = maze_graph
         self.start = START
         self.finish = FINISH
-        self.start.position = (maze.cells[0][0].center.x, maze.cells[0][0].center.y)
-        self.finish.position = (maze.cells[-1][-1].center.x, maze.cells[-1][-1].center.y)
+        self.start.position = (self.maze.cells[0][0].center.x, self.maze.cells[0][0].center.y)
+        self.finish.position = (self.maze.cells[-1][-1].center.x, self.maze.cells[-1][-1].center.y)
 
     def draw(self) -> None:
         self._draw_cells()
