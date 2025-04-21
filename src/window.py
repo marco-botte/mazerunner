@@ -4,7 +4,6 @@ import arcade
 import arcade.clock
 
 from .maze import Maze
-from .maze_graph import MazeGraph
 from .renderer import BACKGROUND_COLOR, Renderer
 
 SECS_UNTIL_START = 2
@@ -15,11 +14,7 @@ class Window(arcade.Window):
     def __init__(self, width: int, height: int, maze: Maze, fps: int) -> None:
         super().__init__(width, height, "mazerunner", update_rate=1 / fps, draw_rate=1 / fps)
         arcade.set_background_color(BACKGROUND_COLOR)
-        self.maze = maze
-        self.width = width
-        self.height = height
-        self.graph = MazeGraph(maze)
-        self.renderer = Renderer(self.graph)
+        self.renderer = Renderer(maze)
         self.path_length = 0
         self.clock = arcade.clock.Clock()
         self.finished = 0.0

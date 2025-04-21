@@ -15,8 +15,9 @@ class Maze:
 
     @classmethod
     def from_dimensions(cls, width: int, height: int, num_rows: int, num_cols: int) -> "Maze":
-        cell_width = round(width / (num_rows + 4))  # 2 padding on each side
-        cell_height = round(height / (num_cols + 4))  # 2 padding on each side
+        # 2 padding units to each border
+        cell_width = round(width / (num_rows + 4))
+        cell_height = round(height / (num_cols + 4))
         return cls(num_rows, num_cols, cell_width, cell_height)
 
     def cell(self, i: int, j: int) -> Cell:
@@ -24,31 +25,27 @@ class Maze:
 
     def _create_cells(self) -> list[list[Cell]]:
         cells: list[list[Cell]] = []
+        x_base = 2 * self.cell_width
+        y_base = 2 * self.cell_height
         for idx_x in range(self.num_rows):
             new_row: list[Cell] = []
             for idx_y in range(self.num_cols):
-                left = 2 * self.cell_width + idx_x * self.cell_width
+                left = x_base + idx_x * self.cell_width
                 right = left + self.cell_width
-                top = 2 * self.cell_height + idx_y * self.cell_height
+                top = y_base + idx_y * self.cell_height
                 bottom = top + self.cell_height
                 new_row.append(Cell(Point(left, top), Point(right, bottom)))
             cells.append(new_row)
-        cells[0][0].remove_wall("top")
-        cells[-1][-1].remove_wall("bottom")
         return cells
 
-    def _break_walls(self, x_idx: int, y_idx: int) -> None:
-        cell = self.cells[x_idx][y_idx]
+    def _break_walls(self, x: int, y: int) -> None:
+        cell = self.cells[x][y]
         cell.visited = True
         while True:
-            possible = [
-                cell
-                for cell in self._adjacent_to(x_idx, y_idx)
-                if not self.cells[cell[0]][cell[1]].visited
-            ]
-            if not possible:
+            unvisited = [c for c in self._adjacent_to(x, y) if not self.cells[c[0]][c[1]].visited]
+            if not unvisited:
                 break
-            next_x, next_y, direction = random.choice(possible)
+            next_x, next_y, direction = random.choice(unvisited)
             cell.remove_wall(direction)
             self.cells[next_x][next_y].remove_wall(direction, True)
             self._break_walls(next_x, next_y)
@@ -58,8 +55,5 @@ class Maze:
         right = (x_idx + 1, y_idx, "right")
         top = (x_idx, y_idx - 1, "top")
         bottom = (x_idx, y_idx + 1, "bottom")
-        return [
-            adj
-            for adj in [left, right, top, bottom]
-            if 0 <= adj[0] < self.num_rows and 0 <= adj[1] < self.num_cols
-        ]
+        in_bounds = lambda pt: 0 <= pt[0] < self.num_rows and 0 <= pt[1] < self.num_cols  # noqa: E731
+        return [adj for adj in [left, right, top, bottom] if in_bounds(adj)]
