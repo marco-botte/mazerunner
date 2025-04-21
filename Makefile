@@ -4,7 +4,7 @@
 all: format lint type_check test 
 
 install:
-	poetry install
+	poetry install --no-root
 
 run:
 	poetry run python main.py
