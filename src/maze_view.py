@@ -11,12 +11,9 @@ SECS_UNTIL_START = 2
 SECS_UNTIL_CLOSING = 3
 
 
-class Window(arcade.Window):
+class MazeView(arcade.View):
     def __init__(self, cfg: Config) -> None:
-        super().__init__(
-            cfg.width, cfg.height, "mazerunner", update_rate=1 / cfg.fps, draw_rate=1 / cfg.fps
-        )
-        arcade.set_background_color(BACKGROUND_COLOR)
+        super().__init__(background_color=BACKGROUND_COLOR)
         self.renderer = Renderer(Maze.from_config(cfg), scale=cfg.width / 5000)
         self.path_length = 0
         self.clock = arcade.clock.Clock()
