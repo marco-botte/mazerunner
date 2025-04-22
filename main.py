@@ -1,18 +1,12 @@
 import arcade
 
-from src.maze import Maze
+from src.config import Config
 from src.window import Window
-
-N_ROWS = 30
-N_COLS = 30
-FPS = 60
 
 
 def main() -> None:
-    width = 1000
-    height = (width * 3) // 4
-    maze = Maze.from_dimensions(width, height, num_rows=N_ROWS, num_cols=N_COLS)
-    Window(width, height, maze, fps=FPS)
+    cfg = Config(width=1000, fps=60, n_rows=30, n_cols=30)
+    Window(cfg)
     arcade.run()
 
 

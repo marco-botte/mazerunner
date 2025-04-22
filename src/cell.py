@@ -36,8 +36,7 @@ class Cell:
 
     def remove_wall(self, direction: Direction, opposite_dir: bool = False) -> None:
         dir = direction.value if not opposite_dir else opposite(direction).value
-        attr = f"has_{dir}_wall"
-        setattr(self, attr, False)
+        setattr(self, f"has_{dir}_wall", False)
 
     @cached_property
     def top_right(self) -> Point:

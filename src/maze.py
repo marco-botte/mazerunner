@@ -1,6 +1,7 @@
 import random
 
 from .cell import Cell, Direction
+from .config import Config
 from .point import Point
 
 
@@ -14,11 +15,11 @@ class Maze:
         self._break_walls(0, 0)
 
     @classmethod
-    def from_dimensions(cls, width: int, height: int, num_rows: int, num_cols: int) -> "Maze":
+    def from_config(cls, cfg: Config) -> "Maze":
         # 2 padding units to each border
-        cell_width = round(width / (num_rows + 4))
-        cell_height = round(height / (num_cols + 4))
-        return cls(num_rows, num_cols, cell_width, cell_height)
+        cell_width = round(cfg.width / (cfg.n_rows + 4))
+        cell_height = round(cfg.height / (cfg.n_cols + 4))
+        return cls(cfg.n_rows, cfg.n_cols, cell_width, cell_height)
 
     def cell(self, i: int, j: int) -> Cell:
         return self.cells[i][j]
