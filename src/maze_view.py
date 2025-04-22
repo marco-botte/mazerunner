@@ -5,7 +5,7 @@ import arcade.clock
 
 from .config import Config
 from .maze import Maze
-from .renderer import BACKGROUND_COLOR, Renderer
+from .renderer import Renderer
 
 SECS_UNTIL_START = 2
 SECS_UNTIL_CLOSING = 3
@@ -13,7 +13,7 @@ SECS_UNTIL_CLOSING = 3
 
 class MazeView(arcade.View):
     def __init__(self, cfg: Config) -> None:
-        super().__init__(background_color=BACKGROUND_COLOR)
+        super().__init__()
         self.cfg = cfg
         self.renderer = Renderer(Maze.from_config(cfg), scale=cfg.width / 5000)
         self.path_length = 0
@@ -21,8 +21,8 @@ class MazeView(arcade.View):
         self.finished = 0.0
 
     def on_show_view(self) -> None:
-        self.window.set_draw_rate(1 / self.cfg.fps)
-        self.window.set_update_rate(1 / self.cfg.fps)
+        self.window.set_draw_rate(max(1 / self.cfg.fps, 1 / 30))
+        self.window.set_update_rate(max(1 / self.cfg.fps, 1 / 30))
 
     def on_update(self, delta_time: float) -> None:
         self.clock.tick(delta_time)

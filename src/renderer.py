@@ -10,8 +10,8 @@ from .point import Point
 
 BACKGROUND_COLOR = arcade.color.CADET_BLUE
 WALL_COLOR = arcade.color.ASH_GREY
-HIGHLIGHT_COLOR = arcade.color.BLUEBERRY
-BORDER_COLOR = arcade.color.FRENCH_WINE  # ac1e44 for icons & border
+PATH_COLOR = arcade.color.BLUEBERRY
+HIGHLIGHT_COLOR = arcade.color.FRENCH_WINE  # ac1e44 for icons & border
 FINISH_COLOR = arcade.color.SUNGLOW
 
 
@@ -21,7 +21,7 @@ class Renderer:
         self.scale = scale
         self.runner = MazeRunner(maze)
         self.solved_maze = False
-        self.border_color = BORDER_COLOR
+        self.border_color = HIGHLIGHT_COLOR
 
     def draw(self, path_length: int) -> None:
         self._draw_cells()
@@ -34,7 +34,7 @@ class Renderer:
         for curr, next in pairwise(subpath):
             cell = self.maze.cell(*curr)
             next_cell = self.maze.cell(*next)
-            self._draw_line(cell.center, next_cell.center, HIGHLIGHT_COLOR)
+            self._draw_line(cell.center, next_cell.center, PATH_COLOR)
         if length >= len(self.runner.shortest_path):
             self.solved_maze = True
             self.border_color = FINISH_COLOR
