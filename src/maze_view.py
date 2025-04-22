@@ -14,10 +14,15 @@ SECS_UNTIL_CLOSING = 3
 class MazeView(arcade.View):
     def __init__(self, cfg: Config) -> None:
         super().__init__(background_color=BACKGROUND_COLOR)
+        self.cfg = cfg
         self.renderer = Renderer(Maze.from_config(cfg), scale=cfg.width / 5000)
         self.path_length = 0
         self.clock = arcade.clock.Clock()
         self.finished = 0.0
+
+    def on_show_view(self) -> None:
+        self.window.set_draw_rate(1 / self.cfg.fps)
+        self.window.set_update_rate(1 / self.cfg.fps)
 
     def on_update(self, delta_time: float) -> None:
         self.clock.tick(delta_time)

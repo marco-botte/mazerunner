@@ -16,4 +16,4 @@ class Config:
 
     @property
     def fps(self) -> int:
-        return self.n_cols * 2  # tinker with this or get user input
+        return max(10, self.n_cols * 2)  # tinker with this or get user input

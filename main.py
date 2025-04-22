@@ -1,15 +1,13 @@
 import arcade
 
 from src.config import Config
-from src.maze_view import MazeView
+from src.config_view import ConfigView
 
 
 def main() -> None:
-    cfg = Config(n_cols=30)
-    window = arcade.Window(
-        cfg.width, cfg.height, "mazerunner", update_rate=1 / cfg.fps, draw_rate=1 / cfg.fps
-    )
-    window.show_view(MazeView(cfg))
+    cfg = Config(n_cols=0)
+    window = arcade.Window(cfg.width, cfg.height, update_rate=1 / 100)
+    window.show_view(ConfigView(cfg))
     arcade.run()
 
 
